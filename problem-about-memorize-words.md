@@ -1,8 +1,8 @@
 ---
 title: 背单词问题
 date: 2016-10-15 22:24:28
-tags: [概率,数学]
-categories：数学
+tags: 概率
+categories: 数学
 ---
 
 ## 问题描述
@@ -57,37 +57,38 @@ $$
 
 根据这个定义，$X_0$就是在有$n$个新词，$m$个旧词的情况下背完单词的天数；$X_1$就是在有$n-1$个新词，$m+1$个旧词的情况下背完单词的天数...，我们目的就是要求$E(X_0)$,直接求$E(X_0)$比较麻烦，但是我们可以利用$E(X_i)(0\lt i\le\min(n,k))$的结果来求得$E(X_0)$。
 
-在有$n$个新词，$m$个旧词,每天抽取$k$单词的情况下，第一天所抽取的新词数为T,则$\max(k-m,0)\le T\le \min(n,k)$,则$P(T=t)=\frac{C_n^tC_m^{k-t}}{C_{m+n}^{k}}$。那么第一天过后有$n-t$个新词，$m+t$个旧词,根据定义需要$X_t$天背完。设$X_t\in\{x_{t1},x_{t2},...x_{ti}\}$，则$X_t+1\in\{x_{t1}+1,x_{t2}+1,...x_{ti}+1\}$那么$P(X_0=x_{ti}+1)=P(T=t)P(X_t+1=x_{ti}+1)$(这里没有考虑各个$X_t$之间取值有可能重复，实际上是否重复并不影响我们计算期望),为了公式看起来比较简便令$a=max(k-m,0),b=min(n,k)$，利用定理一的结论可得
-
+在有$n$个新词，$m$个旧词,每天抽取$k$单词的情况下，第一天所抽取的新词数为T,则$\max(k-m,0)\le T\le \min(n,k)$,则{% raw %}$P(T=t)=\frac{C_n^tC_m^{k-t}}{C_{m+n}^{k}}$.{% endraw %}那么第一天过后有$n-t$个新词，$m+t$个旧词,根据定义需要$X_t$天背完。设{% raw %}$X_t\in\{x_{t1},x_{t2},...x_{ti}\}${% endraw %}，则{% raw %}$X_t+1\in\{x_{t1}+1,x_{t2}+1,...x_{ti}+1\}${% endraw %}那么{% raw %}$P(X_0=x_{ti}+1)=P(T=t)P(X_t+1=x_{ti}+1)${% endraw %}(这里没有考虑各个$X_t$之间取值有可能重复，实际上是否重复并不影响我们计算期望),为了公式看起来比较简便令$a=max(k-m,0),b=min(n,k)$，利用定理一的结论可得
+{% raw %}
 $$
 \begin{align}
-E(X_0)&=\sum_{t=a}^bP(T=t)E(X_t+1)\\\\
-&=\sum_{t=a}^bP(T=t)E(X_t)+P(T=t)\\\\
-&=\sum_{t=a}^bP(T=t)+\sum_{t=a}^bP(T=t)E(X_t)\\\\
+E(X_0)&=\sum_{t=a}^bP(T=t)E(X_t+1)\\
+&=\sum_{t=a}^bP(T=t)E(X_t)+P(T=t)\\
+&=\sum_{t=a}^bP(T=t)+\sum_{t=a}^bP(T=t)E(X_t)\\
 &=1+\sum_{t=a}^bP(T=t)E(X_t)
 \end{align}
 $$
-
+{% endraw %}
 在给定$k$的情况下，注意到$E(X_t)$的值只与$n-t,m+t$有关，设$E(X_t)=f(n-t,m+t)$,所以$E(X_0)=f(n,m)$。可得如下递推公式
-
+{% raw %}
 $$
 f(n,m)=1+\sum_{t=max(k-m,0)}^{min(n,k)}\frac{C_n^tC_m^{k-t}}{C_{m+n}^{k}}
 f(n-t,m+t);(n\ne0)
 $$
+{% endraw %}
 
 很遗憾我无法给出一个封闭式，这就是最终的结论。接下来我们利用这个公式计算f(3000,0),注意到等式的右边也可能含有$f(n,m)$项，为了方便递归计算，将等式改写成如下形式
-
+{% raw %}
 $$
 f(n,m) =
 \begin{cases}
 1+\sum_{t=k-m}^{min(n,k)}\frac{C_n^tC_m^{k-t}}{C_{m+n}^{k}}
-f(n-t,m+t);k\gt m,n\ne0\\\\
+f(n-t,m+t);k\gt m,n\ne0\\
 \frac{1+\sum_{t=1}^{min(n,k)}\frac{C_n^tC_m^{k-t}}{C_{m+n}^{k}}
-f(n-t,m+t)}{1-\frac{C_m^k}{C_{m+n}^{k}}};& k\le m,n\ne0  \\\\
-0;(n=0)\\\\
+f(n-t,m+t)}{1-\frac{C_m^k}{C_{m+n}^{k}}};& k\le m,n\ne0  \\
+0;(n=0)\\
 \end{cases}
 $$
-
+{% endraw %}
 ## 实验
 
 为了解决我们在最开始提出的问题，我们需要利用递推式来计算$f(3000,0)$，接下来我们用python语言来实现这个计算过程，计算代码如下。
